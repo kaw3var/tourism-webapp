@@ -1,0 +1,42 @@
+.header {
+    display: flex;
+    flex-direction: column;
+}
+
+.header__nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 50px;
+}
+
+.nav__logo {
+    width: 70px;
+}
+
+.nav__img {
+    width: 100%;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px    
+}
+
+.header__img {
+    width: 100%;
+}
+/* <Router>
+    <Header />
+
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/legendary" element={<Legendary />} />
+      <Route path="/anniversary" element={<Anniversary />} />
+      <Route path="/special" element={<Special />} />
+    </Routes>
+
+    <Footer />
+    
+</Router> */
