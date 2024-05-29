@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
 import Header from "./components/header/Header";
 import Clients from "./pages/Clients";
+import RouteTrip from "./pages/Routes/Routes";
 
 
 import "./styles/normalize.css";
@@ -18,6 +19,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/routes" element={<RouteTrip />}/>
           <Route path="/clients" element={<Clients />}/>
         </Routes>
       </Router>

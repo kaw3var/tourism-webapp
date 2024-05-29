@@ -2,16 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
-	"log"
-	"net/http"
-	"strconv"
-	"tourism-back-end/data"
-	"tourism-back-end/models"
-
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+
+	"tourism-back-end/api"
 )
 
 func enableCORS(next http.Handler) http.Handler {
@@ -45,122 +42,8 @@ func main() {
 
 	r := mux.NewRouter()
 
-	// API endpoint to GET CLIENTS
-	r.HandleFunc("/api/clients", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for /api/clients")
-		clients, err := data.GetClients(db)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if len(clients) == 0 {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(clients)
-	}).Methods("GET")
-
-	// API endpoint to GET a SPECIFIC CLIENT by ID
-	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for /api/clients/{id}")
-		vars := mux.Vars(r)
-		id, err := strconv.Atoi(vars["id"])
-		if err != nil {
-			http.Error(w, "Invalid ClientID", http.StatusBadRequest)
-			return
-		}
-
-		client, err := data.GetClientByID(db, id)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				http.Error(w, "Client not found", http.StatusNotFound)
-			} else {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(client)
-	}).Methods("GET")
-
-	// API endpoint to GET PRICE-NAME ROUTE
-	r.HandleFunc("/api/route-costs", func(w http.ResponseWriter, r *http.Request) {
-		routeCost, err := data.GetRouteCost(db)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		log.Println("Received request for /api/route-costs")
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(routeCost)
-	}).Methods("GET")
-
-	// API endpoint to CREATE CLIENT
-	r.HandleFunc("/api/clients", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for POST /api/clients")
-		var client models.Client
-		err := json.NewDecoder(r.Body).Decode(&client)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		err = data.CreateClient(db, client.FirstName, client.LastName, client.MiddleName, client.Phone, client.Address)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-	}).Methods("POST")
-
-	// API endpoint to UPDATE CLIENT by ID
-	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for PUT /api/clients/{id}")
-		vars := mux.Vars(r)
-		id, err := strconv.Atoi(vars["id"])
-		if err != nil {
-			http.Error(w, "Invalid ClientID", http.StatusBadRequest)
-			return
-		}
-
-		var client models.Client
-		err = json.NewDecoder(r.Body).Decode(&client)
-		if err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
-			return
-		}
-
-		err = data.UpdateClientByID(db, id, client.FirstName, client.LastName, client.MiddleName, client.Phone, client.Address)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-	}).Methods("PUT")
-
-	// API endpoint to DELETE CLIENT by ID
-	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for DELETE /api/clients/{id}")
-		vars := mux.Vars(r)
-		id, err := strconv.Atoi(vars["id"])
-		if err != nil {
-			http.Error(w, "Invalid ClientID", http.StatusBadRequest)
-			return
-		}
-
-		err = data.DeleteClientByID(db, id)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-	}).Methods("DELETE")
+	api.ClientRoutes(r, db)
+	api.RouteTripRoutes(r, db)
 
 	corsOptions := handlers.CORS(
 		handlers.AllowedOrigins([]string{"http://localhost:3000"}),

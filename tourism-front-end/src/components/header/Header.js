@@ -11,6 +11,7 @@ const Header = () => {
                 </div>
                 <nav className="nav-link">
                     <a href="/" className="nav-link__item">Главная</a>
+                    <a href="/routes" className="nav-link__item">Машруты</a>
                     <a href="/clients" className="nav-link__item">Клиенты</a>
                     <a href="/book-tour" className="nav-link__item">Запись на тур</a>
                     {/* <Link to="/" className="nav-link__item">Главная</Link>

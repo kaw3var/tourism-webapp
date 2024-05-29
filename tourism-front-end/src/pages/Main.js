@@ -10,7 +10,7 @@ const Main = () => {
 
   const fetchRouteCosts = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/route-costs');
+      const response = await axios.get('http://localhost:8080/api/routes');
       setRoute(response.data);
     } catch(error) {
       console.error('Error fatching route costs', error)
@@ -25,7 +25,7 @@ const Main = () => {
           {route.map((route, index) =>(
             <div className="card" key={index}>
             <div className="card__photo">
-              <img src={route.RouteImg} className="card__img" loading="lazy" alt="Nara"/>
+              <img src={route.RouteImg} className="card__img" loading="lazy" alt={route.RouteName}/>
             </div>
             <p className="card__name">{route.RouteName}</p>
             <p className="card__price">{route.RoutePrice}¥</p>
