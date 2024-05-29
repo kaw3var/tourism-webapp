@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
 import Header from "./components/header/Header";
-import Profile from "./pages/Profile";
 import Clients from "./pages/Clients";
 
 
@@ -19,7 +18,6 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/clients" element={<Clients />}/>
         </Routes>
       </Router>

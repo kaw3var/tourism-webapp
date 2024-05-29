@@ -3,6 +3,16 @@ import { useEffect, useState } from "react";
 
 const Profile = () => {
     const [client, setClient] = useState([]);
+    const [clientData, setClientData] = useState({
+        LastName: '',
+        FirstName: '',
+        MiddleName: '',
+        Phone: '',
+        Address: ''
+    });
+    const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editClientId, setEditClientId] = useState(null);
 
     useEffect(() => {
         fetchClientInfo();
@@ -20,14 +30,20 @@ const Profile = () => {
             console.error('Error fetching client info', error);
         }
     };
-    
 
-    const handleEdit = async (id, newData) => {
-        try {
-            await axios.put(`http://localhost:8080/api/clients/${id}`, newData);
-            fetchClientInfo();
-        } catch (error) {
-            console.error(`Error updating client with ID ${id}`, error);
+    const handleEdit = async (id) => {
+        const clientToEdit = client.find(client => client.ClientID === id);
+        if (clientToEdit) {
+            setClientData({
+                LastName: clientToEdit.LastName,
+                FirstName: clientToEdit.FirstName,
+                MiddleName: clientToEdit.MiddleName,
+                Phone: clientToEdit.Phone,
+                Address: clientToEdit.Address
+            });
+            setIsEditing(true);
+            setEditClientId(id);
+            setIsAdding(true);
         }
     };
 
@@ -43,13 +59,112 @@ const Profile = () => {
         }
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setClientData({ ...clientData, [name]: value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (isEditing) {
+            try {
+                await axios.put(`http://localhost:8080/api/clients/${editClientId}`, clientData);
+                setIsEditing(false);
+                setEditClientId(null);
+            } catch (error) {
+                console.error(`Error updating client with ID ${editClientId}`, error);
+            }
+        } else {
+            try {
+                await axios.post('http://localhost:8080/api/clients', clientData);
+            } catch (error) {
+                console.error('Error adding new client', error)
+            }
+        }
+        setClientData({
+            LastName: '',
+            FirstName: '',
+            MiddleName: '',
+            Phone: '',
+            Address: ''
+        });
+        setIsAdding(false);
+        fetchClientInfo();
+    };
+
     return (  
         <div className="container">
             <div className="clients">
-                <div className="clients__panel">
-                    <button className="clients__btn">Добавить клиента</button>
+                <h1 className="page__title">Клиенты</h1>
+                <div className="add-block">
+                    {!isAdding && (
+                        <button onClick={() => setIsAdding(true)}>
+                            Добавить клиента
+                        </button>
+                    )}
                 </div>
-                <table className="clients__table">
+                {isAdding && (
+                    <form className="form-card" onSubmit={handleSubmit}>
+                        <div className="form-card__info">
+                            <label>Фамилия</label>
+                            <input
+                                type="text"
+                                name="LastName"
+                                value={clientData.LastName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-card__info">
+                            <label>Имя</label>
+                            <input
+                                type="text"
+                                name="FirstName"
+                                value={clientData.FirstName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-card__info">
+                            <label>Отчество</label>
+                            <input
+                                type="text"
+                                name="MiddleName"
+                                value={clientData.MiddleName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-card__info">
+                            <label>Телефон</label>
+                            <input
+                                type="text"
+                                name="Phone"
+                                value={clientData.Phone}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-card__info">
+                            <label>Адрес</label>
+                            <input
+                                type="text"
+                                name="Address"
+                                value={clientData.Address}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="btn-block">
+                            <button onClick={() => setIsAdding(!isAdding)}>
+                                {isAdding ? 'Отмена' :'Добавить клиента'}
+                            </button>
+                            <button type="submit">
+                                {isEditing ? 'Сохранить изменения' : 'Сохранить'}
+                            </button>
+                        </div>
+                    </form>
+                )}
+                <table className="table-block">
                     <thead>
                         <tr>
                             <th>№</th>
@@ -73,8 +188,8 @@ const Profile = () => {
                                     <td>{client.Address}</td>
                                     <td>
                                         <div className="btn-block">
-                                            <button className="clients__btn" onClick={() => handleEdit(client.ClientID)}>Редактировать</button>
-                                            <button className="clients__btn" onClick={() => handleDelete(client.ClientID)}>Удалить</button>
+                                            <button onClick={() => handleEdit(client.ClientID)}>Редактировать</button>
+                                            <button onClick={() => handleDelete(client.ClientID)}>Удалить</button>
                                         </div>
                                     </td>
                                 </tr>

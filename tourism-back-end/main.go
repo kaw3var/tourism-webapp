@@ -45,7 +45,7 @@ func main() {
 
 	r := mux.NewRouter()
 
-	// API endpoint to get clients
+	// API endpoint to GET CLIENTS
 	r.HandleFunc("/api/clients", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received request for /api/clients")
 		clients, err := data.GetClients(db)
@@ -63,7 +63,7 @@ func main() {
 		json.NewEncoder(w).Encode(clients)
 	}).Methods("GET")
 
-	// API endpoint to get a specific client by ID
+	// API endpoint to GET a SPECIFIC CLIENT by ID
 	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received request for /api/clients/{id}")
 		vars := mux.Vars(r)
@@ -87,7 +87,7 @@ func main() {
 		json.NewEncoder(w).Encode(client)
 	}).Methods("GET")
 
-	// API endpoint to get price and name of route
+	// API endpoint to GET PRICE-NAME ROUTE
 	r.HandleFunc("/api/route-costs", func(w http.ResponseWriter, r *http.Request) {
 		routeCost, err := data.GetRouteCost(db)
 		if err != nil {
@@ -100,7 +100,25 @@ func main() {
 		json.NewEncoder(w).Encode(routeCost)
 	}).Methods("GET")
 
-	// API endpoint to update client by ID
+	// API endpoint to CREATE CLIENT
+	r.HandleFunc("/api/clients", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Received request for POST /api/clients")
+		var client models.Client
+		err := json.NewDecoder(r.Body).Decode(&client)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = data.CreateClient(db, client.FirstName, client.LastName, client.MiddleName, client.Phone, client.Address)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}).Methods("POST")
+
+	// API endpoint to UPDATE CLIENT by ID
 	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received request for PUT /api/clients/{id}")
 		vars := mux.Vars(r)
@@ -126,7 +144,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	}).Methods("PUT")
 
-	// API endpoint to delete client by ID
+	// API endpoint to DELETE CLIENT by ID
 	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received request for DELETE /api/clients/{id}")
 		vars := mux.Vars(r)
@@ -151,6 +169,5 @@ func main() {
 		handlers.AllowCredentials(),
 	)
 
-	// Начало сервера с CORS
 	log.Fatal(http.ListenAndServe(":8080", corsOptions(r)))
 }

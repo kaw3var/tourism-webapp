@@ -58,14 +58,16 @@ body {
 }
 
 button {
-    padding: 12px 20px;
+    padding: 10px 15px;
     cursor: pointer;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     background-color: white;
+    transition: all 0.1s;
 }
 
 button:hover {
-    color: white;
+    color: rgb(255, 255, 255);
     background: rgb(255, 0, 0);
 }
+

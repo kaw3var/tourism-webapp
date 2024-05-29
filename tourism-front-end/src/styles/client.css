@@ -1,17 +1,48 @@
 .clients {
     display: flex;
     flex-direction: column;
-    gap: 50px;
 }
 
-.clients__table {
+.page__title {
+    margin: 30px auto;
+}
+
+.add-block {
+    margin-left: auto;
+}
+
+.form-card { 
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px 30px;
+    border: 1px solid #818181;
+}
+
+.form-card__info {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 15px 0 15px 0;
+    align-items: center;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input {
+    padding: 5px;
     border-radius: 5px;
+    border: 1px solid #818181;
+}
+
+.table-block {
+    margin-top: 30px;
     width: 100%; 
     border-collapse: collapse;
 }
 
 th, td {
-    border: 1px solid #bebebe;
+    border: 2px solid #bebebe;
     padding: 12px;
 }
 
@@ -25,6 +56,5 @@ tr :first-child {
 
 .btn-block {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
-

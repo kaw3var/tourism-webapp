@@ -142,6 +142,20 @@ func GetRouteCost(db *sql.DB) ([]models.Route, error) {
 	return routeCosts, nil
 }
 
+// CreateClient add client to the db
+func CreateClient(db *sql.DB, FirstName, LastName, MiddleName, Phone, Address string) error {
+	query := `
+	INSERT INTO dbo.Clients (FirstName, LastName, MiddleName, Phone, Address)
+	VALUES (@p1, @p2, @p3, @p4, @p5)`
+
+	_, err := db.Exec(query, FirstName, LastName, MiddleName, Phone, Address)
+	if err != nil {
+		log.Printf("Error creating client: %v", err)
+		return err
+	}
+	return nil
+}
+
 // DeleteClient delete client from the db
 func DeleteClientByID(db *sql.DB, id int) error {
 	query := `DELETE FROM dbo.Clients WHERE ClientID = @ClientID`
