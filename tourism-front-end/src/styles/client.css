@@ -1,0 +1,30 @@
+.clients {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.clients__table {
+    border-radius: 5px;
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #bebebe;
+    padding: 12px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr :first-child {
+    text-align: center;
+}
+
+.btn-block {
+    display: flex;
+    justify-content: space-evenly;
+}
+

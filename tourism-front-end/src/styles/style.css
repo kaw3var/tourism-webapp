@@ -21,11 +21,8 @@ body {
 .container {
     margin: 0 auto;
     width: 1600px;
-    background-color: rgb(207, 207, 207);
+    border: 1px solid black;
     padding: 10px 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
 }
 
 .list-tour {
@@ -58,4 +55,17 @@ body {
 .profile {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+}
+
+button {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 25px;
+    background-color: white;
+}
+
+button:hover {
+    color: white;
+    background: rgb(255, 0, 0);
 }

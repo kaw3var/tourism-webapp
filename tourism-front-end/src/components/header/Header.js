@@ -1,17 +1,19 @@
 import React from "react";
-import "./header.css";
+import headerlogo from "./../../img/headerlogo.png";
+
 
 const Header = () => {
     return (  
         <header className="header">
             <div className="header__nav">
                 <div className="nav__logo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" className="nav__img" alt="japan logo"/>
+                    <img src={headerlogo} className="nav__img" alt="japan logo"/>
                 </div>
                 <nav className="nav-link">
-                    <p>Главная</p>
-                    <p>Профиль</p>
-                    <p>Записатья на тур</p>
+                    <a href="/" className="nav-link__item">Главная</a>
+                    <a href="/profile" className="nav-link__item">Профиль</a>
+                    <a href="/clients" className="nav-link__item">Клиенты</a>
+                    <a href="/book-tour" className="nav-link__item">Запись на тур</a>
                     {/* <Link to="/" className="nav-link__item">Главная</Link>
                     <Link to="/profile" className="nav-link__item">Профиль</Link>
                     <Link to="/tour-book" className="nav-link__item">Записаться на тур</Link> */}

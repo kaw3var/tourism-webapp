@@ -8,12 +8,12 @@ const Profile = () => {
         fetchClientInfo();
     }, [])
 
-    const fetchClientInfo = async () => {
+    const fetchClientInfo = async (id) => {
         try {
-            const response = await axios.get('http://localhost:8080/api/clients/1');
+            const response = await axios.get(`http://localhost:8080/api/clients/${id}`);
             setClient(response.data);
         } catch(error) {
-            console.error('Error fatching client info', error);
+            console.error(`Error fatching client info with ID ${id}`, error);
         }
     };
 

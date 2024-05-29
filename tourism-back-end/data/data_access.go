@@ -141,3 +141,31 @@ func GetRouteCost(db *sql.DB) ([]models.Route, error) {
 	}
 	return routeCosts, nil
 }
+
+// DeleteClient delete client from the db
+func DeleteClientByID(db *sql.DB, id int) error {
+	query := `DELETE FROM dbo.Clients WHERE ClientID = @ClientID`
+	_, err := db.Exec(query, sql.Named("ClientID", id))
+	if err != nil {
+		log.Printf("Error deleting client: %v", err)
+		return fmt.Errorf("Failed to delete client: %v ", err)
+	}
+	return nil
+}
+
+// UpdateClient update client info in the db
+func UpdateClientByID(db *sql.DB, id int, firstName, lastName, middleName, phone, address string) error {
+	query := `UPDATE Clients SET FirstName = @FirstName, LastName = @LastName, MiddleName = @MiddleName, Phone = @Phone, Address = @Address WHERE ClientID = @ClientID`
+	_, err := db.Exec(query,
+		sql.Named("FirstName", firstName),
+		sql.Named("LastName", lastName),
+		sql.Named("MiddleName", middleName),
+		sql.Named("Phone", phone),
+		sql.Named("Address", address),
+		sql.Named("ClientID", id))
+	if err != nil {
+		log.Printf("Error updating client: %v", err)
+		return fmt.Errorf("failed to update client: %v", err)
+	}
+	return nil
+}

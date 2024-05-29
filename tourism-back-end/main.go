@@ -7,8 +7,10 @@ import (
 	"net/http"
 	"strconv"
 	"tourism-back-end/data"
+	"tourism-back-end/models"
 
 	_ "github.com/denisenkom/go-mssqldb"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -52,6 +54,11 @@ func main() {
 			return
 		}
 
+		if len(clients) == 0 {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(clients)
 	}).Methods("GET")
@@ -68,7 +75,11 @@ func main() {
 
 		client, err := data.GetClientByID(db, id)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			if err == sql.ErrNoRows {
+				http.Error(w, "Client not found", http.StatusNotFound)
+			} else {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
 			return
 		}
 
@@ -89,7 +100,57 @@ func main() {
 		json.NewEncoder(w).Encode(routeCost)
 	}).Methods("GET")
 
-	r.Use(enableCORS)
+	// API endpoint to update client by ID
+	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Received request for PUT /api/clients/{id}")
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["id"])
+		if err != nil {
+			http.Error(w, "Invalid ClientID", http.StatusBadRequest)
+			return
+		}
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+		var client models.Client
+		err = json.NewDecoder(r.Body).Decode(&client)
+		if err != nil {
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			return
+		}
+
+		err = data.UpdateClientByID(db, id, client.FirstName, client.LastName, client.MiddleName, client.Phone, client.Address)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}).Methods("PUT")
+
+	// API endpoint to delete client by ID
+	r.HandleFunc("/api/clients/{id}", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Received request for DELETE /api/clients/{id}")
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["id"])
+		if err != nil {
+			http.Error(w, "Invalid ClientID", http.StatusBadRequest)
+			return
+		}
+
+		err = data.DeleteClientByID(db, id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}).Methods("DELETE")
+
+	corsOptions := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:3000"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		handlers.AllowCredentials(),
+	)
+
+	// Начало сервера с CORS
+	log.Fatal(http.ListenAndServe(":8080", corsOptions(r)))
 }

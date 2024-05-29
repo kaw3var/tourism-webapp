@@ -24,6 +24,10 @@
     gap: 50px    
 }
 
+.nav-link__item:hover {
+    color: rgb(255, 0, 0);
+}
+
 .header__img {
     width: 100%;
 }

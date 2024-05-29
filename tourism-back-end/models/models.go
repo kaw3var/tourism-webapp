@@ -9,7 +9,7 @@ type Client struct {
 	ClientID   int
 	LastName   string
 	FirstName  string
-	MiddleName *string
+	MiddleName string
 	Phone      string
 	Address    string
 }
