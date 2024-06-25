@@ -48,7 +48,10 @@ func GetRouteByID(db *sql.DB, routeID int) (models.Route, error) {
 
 // CreateRoute add route to the db
 func CreateRoute(db *sql.DB, RouteName, RouteDescription string, RoutePrice int, RouteImg string) error {
-	query := `INSERT INTO dbo.Routes (RouteName, RouteDescription, RoutePrice, RouteImg) VALUES (@p1, @p2, @p3, @p4)`
+	query := `
+	INSERT INTO dbo.Routes (RouteName, RouteDescription, RoutePrice, RouteImg) 
+	VALUES (@p1, @p2, @p3, @p4)`
+	
 	_, err := db.Exec(query, RouteName, RouteDescription, RoutePrice, RouteImg)
 	if err != nil {
 		return err

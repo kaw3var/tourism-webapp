@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"tourism-back-end/data"
+	"tourism-back-end/functions"
 	"tourism-back-end/models"
 )
 
@@ -57,8 +57,8 @@ func RouteTripRoutes(r *mux.Router, db *sql.DB) {
 	}).Methods("GET")
 
 	// API endpoint to CREATE RouteTrip
-	r.HandleFunc("/api/routes/{id}", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request to POST /api/routes/{id}")
+	r.HandleFunc("/api/routes", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Received request to POST /api/routes")
 		var routeTrip models.Route
 		err := json.NewDecoder(r.Body).Decode(&routeTrip)
 		if err != nil {
@@ -68,6 +68,7 @@ func RouteTripRoutes(r *mux.Router, db *sql.DB) {
 
 		err = data.CreateRoute(db, routeTrip.RouteName, routeTrip.RouteDescription, routeTrip.RoutePrice, routeTrip.RouteImg)
 		if err != nil {
+			log.Println("Error to POST CreateRoute")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

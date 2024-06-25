@@ -6,8 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"tourism-back-end/data"
-	//"tourism-back-end/models"
+	"tourism-back-end/functions"
+	// "tourism-back-end/models"
 )
 
 func TripRoutes(r *mux.Router, db *sql.DB) {

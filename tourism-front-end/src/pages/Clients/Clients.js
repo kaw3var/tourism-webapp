@@ -1,107 +1,34 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React from "react";
+import useClients from "./lib/useClients";
 
-const Profile = () => {
-    const [client, setClient] = useState([]);
-    const [clientData, setClientData] = useState({
-        LastName: '',
-        FirstName: '',
-        MiddleName: '',
-        Phone: '',
-        Address: ''
-    });
-    const [isAdding, setIsAdding] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editClientId, setEditClientId] = useState(null);
-
-    useEffect(() => {
-        fetchClientInfo();
-    }, [])
-
-    const fetchClientInfo = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/clients');
-            if (response.status === 204) {
-                setClient([]);
-            } else {
-                setClient(response.data);
-            }
-        } catch(error) {
-            console.error('Error fetching clients info', error);
-        }
-    };
-
-    const handleEdit = async (id) => {
-        const clientToEdit = client.find(client => client.ClientID === id);
-        if (clientToEdit) {
-            setClientData({
-                LastName: clientToEdit.LastName,
-                FirstName: clientToEdit.FirstName,
-                MiddleName: clientToEdit.MiddleName,
-                Phone: clientToEdit.Phone,
-                Address: clientToEdit.Address
-            });
-            setIsEditing(true);
-            setEditClientId(id);
-            setIsAdding(true);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        if (window.confirm('Вы уверены, что хотите удалить этого клиента?')) {
-            try {
-                await axios.delete(`http://localhost:8080/api/clients/${id}`);
-                fetchClientInfo();
-                console.log('Client deleted successful')
-            } catch (error) {
-                console.error(`Error deleting client with ID ${id}`, error);
-            }
-        }
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setClientData({ ...clientData, [name]: value});
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (isEditing) {
-            try {
-                await axios.put(`http://localhost:8080/api/clients/${editClientId}`, clientData);
-                setIsEditing(false);
-                setEditClientId(null);
-            } catch (error) {
-                console.error(`Error updating client with ID ${editClientId}`, error);
-            }
-        } else {
-            try {
-                await axios.post('http://localhost:8080/api/clients', clientData);
-            } catch (error) {
-                console.error('Error adding new client', error)
-            }
-        }
-        setClientData({
-            LastName: '',
-            FirstName: '',
-            MiddleName: '',
-            Phone: '',
-            Address: ''
-        });
-        setIsAdding(false);
-        fetchClientInfo();
-    };
+const Clients = () => {
+    const {
+        client,
+        clientData,
+        isAdding,
+        isEditing,
+        showDeleteConfirm,
+        handleSubmit,
+        handleEdit,
+        handleDelete,
+        handleCloseForm,
+        handleChange,
+        handleAddButtonClick,
+        openDeleteConfirm,
+        closeDeleteConfirm,
+    } = useClients();
 
     return (  
         <div className="container">
             <h1 className="page__title">Клиенты</h1>
             <div className="add-block">
-                {!isAdding && (
-                    <button onClick={() => setIsAdding(true)}>
-                        Добавить клиента
-                    </button>
-                )}
+                <button onClick={handleAddButtonClick}>
+                    Добавить клиента
+                </button>
             </div>
+            {(isAdding || showDeleteConfirm) && (
+                <div className="overlay" onClick={handleCloseForm}></div>
+            )}
             {isAdding && (
                 <form className="form-card" onSubmit={handleSubmit}>
                     <div className="form-card__info">
@@ -154,8 +81,8 @@ const Profile = () => {
                         />
                     </div>
                     <div className="btn-block">
-                        <button onClick={() => setIsAdding(!isAdding)}>
-                            {isAdding ? 'Отмена' :'Добавить клиента'}
+                        <button type="button" onClick={handleCloseForm}>
+                            Отмена
                         </button>
                         <button type="submit">
                             {isEditing ? 'Сохранить изменения' : 'Сохранить'}
@@ -188,7 +115,7 @@ const Profile = () => {
                                 <td>
                                     <div className="btn-block">
                                         <button onClick={() => handleEdit(client.ClientID)}>Редактировать</button>
-                                        <button onClick={() => handleDelete(client.ClientID)}>Удалить</button>
+                                        <button onClick={() => openDeleteConfirm(client.ClientID)}>Удалить</button>
                                     </div>
                                 </td>
                             </tr>
@@ -200,8 +127,17 @@ const Profile = () => {
                     )}
                 </tbody>
             </table>
+            {showDeleteConfirm && (
+                <div className="delete-confirm">
+                    <p>Вы уверены, что хотите удалить клиента?</p>
+                    <div className="btn-block">
+                        <button onClick={closeDeleteConfirm}>Нет</button>
+                        <button onClick={handleDelete}>Да</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
  
-export default Profile;
+export default Clients;

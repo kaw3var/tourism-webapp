@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"tourism-back-end/data"
+	"tourism-back-end/functions"
 	"tourism-back-end/models"
 )
 
