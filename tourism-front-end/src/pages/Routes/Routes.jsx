@@ -14,8 +14,8 @@ const Routes = () => {
         handleCloseForm,
         handleChange,
         handleFilePhotoChange,
-        handleFileDrop,
         handleAddButtonClick,
+        handleFileDrop,
         openDeleteConfirm,
         closeDeleteConfirm,
     } = useRoutes();
@@ -63,7 +63,7 @@ const Routes = () => {
                     </div>
                     <div className="form-card__info">
                         <label>Фотография</label>
-                        <div className="form-card__info--img" 
+                        <div className="form-card__info--img-input" 
                         onDragOver={(e) => e.preventDefault()} 
                         onDrop={handleFileDrop}>
                             <input
@@ -81,7 +81,7 @@ const Routes = () => {
                                 placeholder="Введите URL картинки"
                             />
                             {(routeTripData.RouteImgFile || routeTripData.RouteImgUrl) && (
-                                <div className="form-card__info" style={{height: 100, width: 100}}>
+                                <div className="form-card__info--img">
                                     <img src={routeTripData.RouteImgFile || routeTripData.RouteImgUrl} alt="Route Preview" />
                                 </div>
                             )}

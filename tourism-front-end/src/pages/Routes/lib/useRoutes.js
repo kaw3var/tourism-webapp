@@ -98,17 +98,27 @@ const useRoutes = () => {
   const handleFilePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      processFile(file);
+      processFile(file, () => { e.target.value = null; });
     }
   };
 
-  const handleFileDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[e];
-    if (file) {
-      processFile(file);
+  const handleFileDrop = (ev) => {
+    ev.preventDefault();
+    if (ev.dataTransfer.items) {
+      [...ev.dataTransfer.items].forEach((item) => {
+        if (item.kind === "file" && ["image/png", "image/gif", "image/jpg", "image/jpeg"].includes(item.type)) {
+          const file = item.getAsFile();
+          if (file.size > 500000) { 
+            alert("File is too large.");
+          } else {
+            processFile(file, () => {});
+          }
+        } else {
+          alert("Invalid file type.");
+        }
+      });
     }
-  }
+  };
 
   const processFile = (file) => {
     const allowedFormats = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -168,8 +178,8 @@ const useRoutes = () => {
     handleCloseForm,
     handleChange,
     handleFilePhotoChange,
-    handleFileDrop,
     handleAddButtonClick,
+    handleFileDrop,
     openDeleteConfirm,
     closeDeleteConfirm,
   };
