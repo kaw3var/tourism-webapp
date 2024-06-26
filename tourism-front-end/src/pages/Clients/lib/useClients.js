@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from '../../../share/api/api';
 import { useEffect, useState } from "react";
 
 const useClients = () => {
@@ -22,7 +22,7 @@ const useClients = () => {
 
     const fetchClientInfo = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/clients');
+            const response = await api.get('/clients');
             if (response.status === 204) {
                 setClient([]);
             } else {
@@ -52,7 +52,7 @@ const useClients = () => {
     const handleDelete = async () => {
         if (clientToDelete) {
             try {
-                await axios.delete(`http://localhost:8080/api/clients/${clientToDelete}`);
+                await api.delete(`/clients/${clientToDelete}`);
                 fetchClientInfo();
                 console.log('Client deleted successful')
             } catch (error) {
@@ -72,7 +72,7 @@ const useClients = () => {
         e.preventDefault();
         if (isEditing) {
             try {
-                await axios.put(`http://localhost:8080/api/clients/${editClientId}`, clientData);
+                await api.put(`/clients/${editClientId}`, clientData);
                 setIsEditing(false);
                 setEditClientId(null);
             } catch (error) {
@@ -80,18 +80,11 @@ const useClients = () => {
             }
         } else {
             try {
-                await axios.post('http://localhost:8080/api/clients', clientData);
+                await api.post('/clients', clientData);
             } catch (error) {
                 console.error('Error adding new client', error)
             }
         }
-        setClientData({
-            LastName: '',
-            FirstName: '',
-            MiddleName: '',
-            Phone: '',
-            Address: ''
-        });
         setIsAdding(false);
         fetchClientInfo();
     };
@@ -138,8 +131,8 @@ const useClients = () => {
         handleSubmit,
         handleEdit,
         handleDelete,
-        handleCloseForm,
         handleChange,
+        handleCloseForm,
         handleAddButtonClick,
         openDeleteConfirm,
         closeDeleteConfirm,

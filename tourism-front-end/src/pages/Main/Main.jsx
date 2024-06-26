@@ -1,22 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import React from 'react';
+import useMain from './lib/useMain';
 
 const Main = () => {
-  const [route, setRoute] = useState([]);
-
-  useEffect(() => {
-    fetchRouteCosts();
-  }, [])
-
-  const fetchRouteCosts = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/routes');
-      setRoute(response.data);
-    } catch(error) {
-      console.error('Error fatching route costs', error)
-    }
-  };
-
+  const {
+    route,
+  } = useMain();
+  
   return (  
     <div className="container">
       <div className="list-tour">

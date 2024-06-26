@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../../../share/api/api';
 import { useState, useEffect } from 'react';
 
 const useRoutes = () => {
@@ -21,7 +21,7 @@ const useRoutes = () => {
 
   const fetchRouteInfo = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/routes');
+      const response = await api.get('/routes');
       if (response.status === 204) {
         setRouteTrip([]);
       } else {
@@ -49,7 +49,7 @@ const useRoutes = () => {
   const handleDelete = async () => {
     if (routeToDelete) {
       try {
-        await axios.delete(`http://localhost:8080/api/routes/${routeToDelete}`);
+        await api.delete(`/routes/${routeToDelete}`);
         fetchRouteInfo();
         console.log('RouteTrip deleted successful');
       } catch (error) {
@@ -76,7 +76,7 @@ const useRoutes = () => {
 
     if (isEditing) {
       try {
-        await axios.put(`http://localhost:8080/api/routes/${editTripId}`, routeTripPayload);
+        await api.put(`/routes/${editTripId}`, routeTripPayload);
         setIsEditing(false);
         setEditTripId(null);
       } catch (error) {
@@ -84,12 +84,11 @@ const useRoutes = () => {
       }
     } else {
       try {
-        await axios.post('http://localhost:8080/api/routes', routeTripPayload);
+        await api.post('/routes', routeTripPayload);
       } catch (error) {
         console.error('Error adding new RouteTrip', error);
       }
     }
-    clearFormFields();
     setIsAdding(false);
     fetchRouteInfo();
   };
