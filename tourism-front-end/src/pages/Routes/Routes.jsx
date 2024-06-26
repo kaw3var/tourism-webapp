@@ -13,6 +13,8 @@ const Routes = () => {
         handleDelete,
         handleCloseForm,
         handleChange,
+        handleFilePhotoChange,
+        handleFileDrop,
         handleAddButtonClick,
         openDeleteConfirm,
         closeDeleteConfirm,
@@ -22,9 +24,7 @@ const Routes = () => {
         <div className="container">
             <h1 className="page__title">Маршруты</h1>
             <div className="add-block">
-                <button onClick={handleAddButtonClick}>
-                    Добавить маршрут
-                </button>
+                <button onClick={handleAddButtonClick}>Добавить маршрут</button>
             </div>
             {(isAdding || showDeleteConfirm) && (
                 <div className="overlay" onClick={handleCloseForm}></div>
@@ -63,12 +63,29 @@ const Routes = () => {
                     </div>
                     <div className="form-card__info">
                         <label>Фотография</label>
-                        <input
-                            type="text"
-                            name="RouteImg"
-                            value={routeTripData.RouteImg}
-                            onChange={handleChange}
-                        />
+                        <div className="form-card__info--img" 
+                        onDragOver={(e) => e.preventDefault()} 
+                        onDrop={handleFileDrop}>
+                            <input
+                                type="file"
+                                name="RouteImgFile"
+                                onChange={handleFilePhotoChange}
+                                accept=".png,.jpg,.jpeg"
+                            />
+                            <p>Перетащите файл сюда или нажмите, чтобы выбрать</p>
+                            <input
+                                type="text"
+                                name="RouteImgUrl"
+                                value={routeTripData.RouteImgUrl}
+                                onChange={handleChange}
+                                placeholder="Введите URL картинки"
+                            />
+                            {(routeTripData.RouteImgFile || routeTripData.RouteImgUrl) && (
+                                <div className="form-card__info" style={{height: 100, width: 100}}>
+                                    <img src={routeTripData.RouteImgFile || routeTripData.RouteImgUrl} alt="Route Preview" />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="btn-block">
                         <button type="button" onClick={handleCloseForm}>
@@ -100,20 +117,14 @@ const Routes = () => {
                                 <td>{routeTrip.RoutePrice}</td>
                                 <td>
                                     <div className="btn-block">
-                                        <button onClick={() => handleEdit(routeTrip.RouteID)}>
-                                            Редактировать
-                                        </button>
-                                        <button onClick={() => openDeleteConfirm(routeTrip.RouteID)}>
-                                            Удалить
-                                        </button>
+                                        <button onClick={() => handleEdit(routeTrip.RouteID)}>Редактировать</button>
+                                        <button onClick={() => openDeleteConfirm(routeTrip.RouteID)}>Удалить</button>
                                     </div>
                                 </td>
                             </tr>
                         ))
                     ) : (
-                        <tr>
-                            <td colSpan="4">Нет данных</td>
-                        </tr>
+                        <tr><td colSpan="4">Нет данных</td></tr>
                     )}
                 </tbody>
             </table>

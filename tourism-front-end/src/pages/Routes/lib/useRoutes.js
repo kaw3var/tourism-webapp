@@ -7,8 +7,9 @@ const useRoutes = () => {
     RouteName: '',
     RouteDescription: '',
     RoutePrice: '',
-    RouteImg: '',
-  });
+    RouteImgFile: '',
+    RouteImgUrl: '',
+    });
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTripId, setEditTripId] = useState(null);
@@ -39,6 +40,7 @@ const useRoutes = () => {
         RouteName: routeTripToEdit.RouteName,
         RouteDescription: routeTripToEdit.RouteDescription,
         RoutePrice: routeTripToEdit.RoutePrice,
+        RouteImg: routeTripToEdit.RouteImg,
       });
       setIsEditing(true);
       setEditTripId(id);
@@ -71,7 +73,7 @@ const useRoutes = () => {
       RouteName: routeTripData.RouteName,
       RouteDescription: routeTripData.RouteDescription,
       RoutePrice: parseInt(routeTripData.RoutePrice),
-      RouteImg: routeTripData.RouteImg,
+      RouteImg: routeTripData.RouteImgFile || routeTripData.RouteImgUrl,
     };
 
     if (isEditing) {
@@ -93,12 +95,41 @@ const useRoutes = () => {
     fetchRouteInfo();
   };
 
+  const handleFilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const handleFileDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[e];
+    if (file) {
+      processFile(file);
+    }
+  }
+
+  const processFile = (file) => {
+    const allowedFormats = ['image/png', 'image/jpg', 'image/jpeg'];
+    if (allowedFormats.includes(file.type)) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setRouteTripData({ ...routeTripData, RouteImgFile: reader.result, RouteImgUrl: '' });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Допустимые форматы: png, jpg, jpeg');
+    }
+  };
+
   const clearFormFields = () => {
     setRouteTripData({
       RouteName: '',
       RouteDescription: '',
       RoutePrice: '',
-      RouteImg: '',
+      RouteImgFile: '',
+      RouteImgUrl: '',
     });
   };
 
@@ -136,6 +167,8 @@ const useRoutes = () => {
     handleDelete,
     handleCloseForm,
     handleChange,
+    handleFilePhotoChange,
+    handleFileDrop,
     handleAddButtonClick,
     openDeleteConfirm,
     closeDeleteConfirm,
