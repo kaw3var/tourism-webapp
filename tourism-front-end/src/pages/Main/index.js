@@ -1,2 +1,4 @@
-export { default as userMain } from './lib/useMain';
-export { default } from './Main';
+import { useMain } from "./lib";
+import Main from "./ui";
+
+export { useMain, Main };

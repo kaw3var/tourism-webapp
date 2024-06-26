@@ -1,14 +1,15 @@
 import React from "react";
 
-const FormInput = ({ label, name, value, onChange, required = false }) => (
+const FormInput = ({ value, label, name, required = false, placeholder, onChange }) => (
     <div className="form-card__info">
         <label>{label}</label>
         <input
+            value={value}
             type="text"
             name={name}
-            value={value}
-            onChange={onChange}
+            placeholder={placeholder}
             required={required}
+            onChange={onChange}
         />
     </div>
 );

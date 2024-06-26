@@ -1,5 +1,7 @@
 import api from '../../../share/api/api';
 import { useState, useEffect } from 'react';
+import { FormInput } from '../../../share';
+
 
 const useRoutes = () => {
   const [routeTrip, setRouteTrip] = useState([]);
@@ -40,7 +42,8 @@ const useRoutes = () => {
         RouteName: routeTripToEdit.RouteName,
         RouteDescription: routeTripToEdit.RouteDescription,
         RoutePrice: routeTripToEdit.RoutePrice,
-        RouteImg: routeTripToEdit.RouteImg,
+        RouteImgFile: '',
+        RouteImgUrl: routeTripToEdit.RouteImg || '',
       });
       setIsEditing(true);
       setEditTripId(id);
@@ -165,6 +168,41 @@ const useRoutes = () => {
     setRouteToDelete(null);
     setShowDeleteConfirm(false);
   };
+  
+  const formInputs = [
+    {
+      value: routeTripData.RouteName,
+      label: 'Маршрут',
+      name: 'RouteName',
+      placeholder: 'Название',
+      required: true,
+      onChange: handleChange
+    },
+    {
+      value: routeTripData.RouteDescription,
+      label: 'Описание',
+      name: 'RouteDescription',
+      placeholder: 'Описание',
+      required: true,
+      onChange: handleChange
+    },
+    {
+      value: routeTripData.RoutePrice,
+      label: 'Цена',
+      name: 'RoutePrice',
+      placeholder: 'Цена',
+      required: true,
+      onChange: handleChange
+    }
+  ];
+
+  const list = () => {
+      const listItems = formInputs.map((item)=>
+        <FormInput value={item.value} label={item.label} name={item.name} 
+        placeholder={item.placeholder} required={item.required} onChange={item.onChange} /> 
+      );
+      return ( listItems );
+  };
 
   return {
     routeTrip,
@@ -182,6 +220,7 @@ const useRoutes = () => {
     handleFileDrop,
     openDeleteConfirm,
     closeDeleteConfirm,
+    list,
   };
 };
 

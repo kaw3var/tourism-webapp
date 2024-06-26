@@ -1,7 +1,9 @@
 import React from "react";
-import useRoutes from './lib/useRoutes';
+import { useRoutes } from './lib';
+import { Button } from "../../share";
 
-const Routes = () => {
+
+const RouteTrip = () => {
     const {
         routeTrip,
         routeTripData,
@@ -18,6 +20,7 @@ const Routes = () => {
         handleFileDrop,
         openDeleteConfirm,
         closeDeleteConfirm,
+        list,
     } = useRoutes();
 
     return (  
@@ -31,36 +34,7 @@ const Routes = () => {
             )}
             {isAdding && (
                 <form className="form-card" onSubmit={handleSubmit}>
-                    <div className="form-card__info">
-                        <label>Название</label>
-                        <input
-                            type="text"
-                            name="RouteName"
-                            value={routeTripData.RouteName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-card__info">
-                        <label>Описание</label>
-                        <input
-                            type="text"
-                            name="RouteDescription"
-                            value={routeTripData.RouteDescription}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-card__info">
-                        <label>Цена</label>
-                        <input
-                            type="text"
-                            name="RoutePrice"
-                            value={routeTripData.RoutePrice}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                    {list()}
                     <div className="form-card__info">
                         <label>Фотография</label>
                         <div className="form-card__info--img-input" 
@@ -88,12 +62,8 @@ const Routes = () => {
                         </div>
                     </div>
                     <div className="btn-block">
-                        <button type="button" onClick={handleCloseForm}>
-                            Отмена
-                        </button>
-                        <button type="submit">
-                            {isEditing ? 'Сохранить изменения' : 'Сохранить'}
-                        </button>
+                        <Button name="Отмена" onClick={handleCloseForm} />
+                        <Button name={isEditing ? 'Сохранить изменения' : 'Сохранить'} type="submit"/>
                     </div>
                 </form>
             )}
@@ -117,14 +87,14 @@ const Routes = () => {
                                 <td>{routeTrip.RoutePrice}</td>
                                 <td>
                                     <div className="btn-block">
-                                        <button onClick={() => handleEdit(routeTrip.RouteID)}>Редактировать</button>
-                                        <button onClick={() => openDeleteConfirm(routeTrip.RouteID)}>Удалить</button>
+                                        <Button name="Редактировать" onClick={() => handleEdit(routeTrip.RouteID)} />
+                                        <Button name="Удалить" onClick={() => openDeleteConfirm(routeTrip.RouteID)} />
                                     </div>
                                 </td>
                             </tr>
                         ))
                     ) : (
-                        <tr><td colSpan="4">Нет данных</td></tr>
+                        <tr><td colSpan="5">Нет данных</td></tr>
                     )}
                 </tbody>
             </table>
@@ -132,8 +102,8 @@ const Routes = () => {
                 <div className="delete-confirm">
                     <p>Вы уверены, что хотите удалить маршрут?</p>
                     <div className="btn-block">
-                        <button onClick={closeDeleteConfirm}>Нет</button>
-                        <button onClick={handleDelete}>Да</button>
+                        <Button name="Нет" onClick={closeDeleteConfirm} />
+                        <Button name="Да" onClick={handleDelete} />
                     </div>
                 </div>
             )}
@@ -141,4 +111,4 @@ const Routes = () => {
     );
 }
  
-export default Routes;
+export default RouteTrip;

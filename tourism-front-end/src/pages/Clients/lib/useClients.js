@@ -1,5 +1,7 @@
 import api from '../../../share/api/api';
 import { useEffect, useState } from "react";
+import { FormInput } from '../../../share';
+
 
 const useClients = () => {
     const [client, setClient] = useState([]);
@@ -122,20 +124,70 @@ const useClients = () => {
         setShowDeleteConfirm(false);
     };
 
+    const formInputs = [
+        {
+          value: clientData.LastName,
+          label: 'Фамилия',
+          name: 'LastName',
+          placeholder: 'Фамилия',
+          required: true,
+          onChange: handleChange
+        },
+        {
+          value: clientData.FirstName,
+          label: 'Имя',
+          name: 'FirstName',
+          placeholder: 'Имя',
+          required: true,
+          onChange: handleChange
+        },
+        {
+            value: clientData.MiddleName,
+            label: 'Отчество',
+            name: 'MiddleName',
+            placeholder: 'Отчество',
+            required: true,
+            onChange: handleChange
+          },
+          {
+            value: clientData.Phone,
+            label: 'Телефон',
+            name: 'Phone',
+            placeholder: 'Телефон',
+            required: true,
+            onChange: handleChange
+          },
+          {
+            value: clientData.Address,
+            label: 'Адрес',
+            name: 'Address',
+            placeholder: 'Адрес',
+            required: true,
+            onChange: handleChange
+          }
+      ];
+
+    const list = () => {
+        const listItems = formInputs.map((item)=>
+          <FormInput value={item.value} label={item.label} name={item.name} 
+          placeholder={item.placeholder} required={item.required} onChange={item.onChange} /> 
+        );
+        return ( listItems );
+    };
+
     return {
         client,
-        clientData,
         isAdding,
         isEditing,
         showDeleteConfirm,
         handleSubmit,
         handleEdit,
         handleDelete,
-        handleChange,
         handleCloseForm,
         handleAddButtonClick,
         openDeleteConfirm,
         closeDeleteConfirm,
+        list,
     };
 };
 

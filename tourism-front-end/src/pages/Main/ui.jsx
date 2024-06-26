@@ -1,5 +1,5 @@
 import React from 'react';
-import useMain from './lib/useMain';
+import { useMain } from './lib';
 
 const Main = () => {
   const {

@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/header/Header";
-import { Main, Clients, RouteTrip, BookTour } from "./pages"
-
+import Header from "./entities/header/ui";
+import { RouteTrip, Main, Clients } from "./pages"
 
 import "./styles/normalize.css";
 import "./styles/style.css";
@@ -18,7 +17,7 @@ const App = () => (
         <Route path="/" element={<Main />} />
         <Route path="/routes" element={<RouteTrip />}/>
         <Route path="/clients" element={<Clients />}/>
-        <Route path="/book-tour" element={<BookTour />}/>
+        {/* <Route path="/book-tour" element={<BookTour />}/> */}
       </Routes>
     </Router>
   </div>

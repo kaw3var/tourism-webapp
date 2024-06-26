@@ -1,2 +1,4 @@
-export { default as useClients } from './lib/useClients';
-export { default } from './Clients';
+import { useClients } from "./lib";
+import Clients from "./ui";
+
+export { useClients, Clients }

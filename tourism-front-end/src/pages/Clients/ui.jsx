@@ -1,11 +1,11 @@
 import React from "react";
-import useClients from "./lib/useClients";
-import FormInput from "../../share/ui/formInput/FormInput";
+import { useClients } from "./lib";
+import { Button } from "../../share";
+
 
 const Clients = () => {
   const {
     client,
-    clientData,
     isAdding,
     isEditing,
     showDeleteConfirm,
@@ -13,10 +13,10 @@ const Clients = () => {
     handleEdit,
     handleDelete,
     handleCloseForm,
-    handleChange,
     handleAddButtonClick,
     openDeleteConfirm,
     closeDeleteConfirm,
+    list,
   } = useClients();
 
   return (  
@@ -32,47 +32,10 @@ const Clients = () => {
       }
       {isAdding && (
         <form className="form-card" onSubmit={handleSubmit}>
-          <FormInput
-            label="Фамилия"
-            name="LastName"
-            value={clientData.LastName}
-            onChange={handleChange}
-            required
-          />
-          <FormInput
-            label="Имя"
-            name="FirstName"
-            value={clientData.FirstName}
-            onChange={handleChange}
-            required
-          />
-          <FormInput
-            label="Отчество"
-            name="MiddleName"
-            value={clientData.MiddleName}
-            onChange={handleChange}
-          />
-          <FormInput
-            label="Телефон"
-            name="Phone"
-            value={clientData.Phone}
-            onChange={handleChange}
-            required
-          />
-          <FormInput
-            label="Адрес"
-            name="Address"
-            value={clientData.Address}
-            onChange={handleChange}
-            required
-          />
+          {list()}
           <div className="btn-block">
-            <button type="button" onClick={handleCloseForm}>
-              Отмена
-            </button>
-            <button type="submit">
-              {isEditing ? 'Сохранить изменения' : 'Сохранить'}
-            </button>
+            <Button name="Отмена" onClick={handleCloseForm} />
+            <Button name={isEditing ? 'Сохранить изменения' : 'Сохранить'} type="submit"/>
           </div>
         </form>
       )}
@@ -100,8 +63,8 @@ const Clients = () => {
                 <td>{client.Address}</td>
                 <td>
                   <div className="btn-block">
-                    <button onClick={() => handleEdit(client.ClientID)}>Редактировать</button>
-                    <button onClick={() => openDeleteConfirm(client.ClientID)}>Удалить</button>
+                    <Button name="Редактировать" onClick={() => handleEdit(client.ClientID)} />
+                    <Button name="Удалить" onClick={() => openDeleteConfirm(client.ClientID)} />
                   </div>
                 </td>
               </tr>
@@ -117,8 +80,8 @@ const Clients = () => {
         <div className="delete-confirm">
           <p>Вы уверены, что хотите удалить клиента?</p>
           <div className="btn-block">
-            <button onClick={closeDeleteConfirm}>Нет</button>
-            <button onClick={handleDelete}>Да</button>
+              <Button name="Нет" onClick={closeDeleteConfirm} />
+              <Button name="Да" onClick={handleDelete} />
           </div>
         </div>
       )}
