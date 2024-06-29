@@ -1,7 +1,8 @@
 import api from '../../../share/api/api';
 import { useEffect, useState } from "react";
+import { FormInput } from '../../../share';
 
-const useTrips = () => {
+const useBookTrip = () => {
     const [trip, setTrip] = useState([]);
     const [tripData, setTripData] = useState({
         ClientID: '',
@@ -121,21 +122,79 @@ const useTrips = () => {
         setShowDeleteConfirm(false);
     };
 
+    const formInputs = [
+        {
+            value: tripData.ClientID,
+            label: 'Номер клиента',
+            name: 'ClientID',
+            placeholder: 'Номер клиента',
+            required: true,
+            onChange: handleChange
+        },
+        {
+            value: tripData.RouteID,
+            label: 'Номер маршрута',
+            name: 'RouteID',
+            placeholder: 'Номер маршрута',
+            required: true,
+            onChange: handleChange
+        },
+        {
+            value: tripData.DiscountID,
+            label: 'Скидка',
+            name: 'DiscoundID',
+            placeholder: 'Скидка',
+            required: true,
+            onChange: handleChange
+        },
+        {
+            value: tripData.TripDate,
+            label: 'Дата',
+            name: 'TripDate',
+            placeholder: 'Дата',
+            required: true,
+            onChange: handleChange
+        },
+        {
+            value: tripData.TripDuration,
+            label: 'Длительность поездки',
+            name: 'TripDuration',
+            placeholder: 'Длительность поездки',
+            required: true,
+            onChange: handleChange
+        },
+        {
+            value: tripData.NumberOfTickets,
+            label: 'Количество билетов',
+            name: 'NumberOfTickets',
+            placeholder: 'Количество билетов',
+            required: true,
+            onChange: handleChange
+        }
+      ];
+
+    const list = () => {
+        const listItems = formInputs.map((item)=>
+          <FormInput value={item.value} label={item.label} name={item.name} 
+          placeholder={item.placeholder} required={item.required} onChange={item.onChange} /> 
+        );
+        return ( listItems );
+    };
+
     return {
         trip,
-        tripData,
         isAdding,
         isEditing,
         showDeleteConfirm,
         handleSubmit,
         handleEdit,
         handleDelete,
-        handleChange,
         handleCloseForm,
         handleAddButtonClick,
         openDeleteConfirm,
         closeDeleteConfirm,
+        list,
     };
 };
 
-export default useTrips;
+export default useBookTrip;

@@ -126,20 +126,20 @@ const useClients = () => {
 
     const formInputs = [
         {
-          value: clientData.LastName,
-          label: 'Фамилия',
-          name: 'LastName',
-          placeholder: 'Фамилия',
-          required: true,
-          onChange: handleChange
+            value: clientData.LastName,
+            label: 'Фамилия',
+            name: 'LastName',
+            placeholder: 'Фамилия',
+            required: true,
+            onChange: handleChange
         },
         {
-          value: clientData.FirstName,
-          label: 'Имя',
-          name: 'FirstName',
-          placeholder: 'Имя',
-          required: true,
-          onChange: handleChange
+            value: clientData.FirstName,
+            label: 'Имя',
+            name: 'FirstName',
+            placeholder: 'Имя',
+            required: true,
+            onChange: handleChange
         },
         {
             value: clientData.MiddleName,
@@ -148,23 +148,23 @@ const useClients = () => {
             placeholder: 'Отчество',
             required: true,
             onChange: handleChange
-          },
-          {
+        },
+        {
             value: clientData.Phone,
             label: 'Телефон',
             name: 'Phone',
             placeholder: 'Телефон',
             required: true,
             onChange: handleChange
-          },
-          {
+        },
+        {
             value: clientData.Address,
             label: 'Адрес',
             name: 'Address',
             placeholder: 'Адрес',
             required: true,
             onChange: handleChange
-          }
+        }
       ];
 
     const list = () => {
